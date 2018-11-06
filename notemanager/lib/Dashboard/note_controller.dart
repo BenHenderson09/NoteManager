@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import '../Edit/edit_note.dart';
+import '../NoteFunctions/note_functions.dart';
 
 class NoteController extends StatefulWidget{
   @override
@@ -24,7 +25,7 @@ class NoteControllerState extends State<NoteController>{
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      _notes = _parseNotes(prefs.getString('notes')); 
+      _notes = NoteFunctions.parseNotes(prefs.getString('notes')); 
     });
   }
 
@@ -35,19 +36,6 @@ class NoteControllerState extends State<NoteController>{
       _notes.removeAt(index);
       prefs.setString('notes', json.encode(_notes));
     });
-  }
-  
-  List<Map<String,String>> _parseNotes(var notes){
-    List<Map<String,String>> parsed = new List<Map<String,String>>();
-
-    if (notes != null){
-      for (var note in json.decode(notes)){
-        Map<String,String> data = Map<String,String>.from(note);
-        parsed.add(data);
-      }
-    }
-    
-    return parsed;
   }
 
   @override

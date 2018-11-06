@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import '../NoteFunctions/note_functions.dart';
+
 // Stateful because if the user hits the back button to hide the keyboard, the text
 // controllers reset.
 class AddNote extends StatefulWidget{                                  
@@ -28,23 +30,10 @@ class AddNoteState extends State<AddNote>{
 
     List<Map<String,String>> notes = new List<Map<String,String>>();
 
-    notes = _parseNotes(prefs.getString('notes'));
+    notes = NoteFunctions.parseNotes(prefs.getString('notes'));
 
     notes.add(note);
     prefs.setString('notes', json.encode(notes));
-  }
-
-  List<Map<String,String>> _parseNotes(var notes){
-    List<Map<String,String>> parsed = new List<Map<String,String>>();
-
-    if (notes != null){
-       for (var note in json.decode(notes)){
-        Map<String,String> data = Map<String,String>.from(note);
-        parsed.add(data);
-      }
-    }
-    
-    return parsed;
   }
 
   @override

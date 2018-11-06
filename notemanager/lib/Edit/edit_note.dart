@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import '../NoteFunctions/note_functions.dart';
+
 class EditNote extends StatefulWidget{
   final int _noteIndex;
 
@@ -36,7 +38,7 @@ class EditNoteState extends State<EditNote>{
 
   Future<void> _loadNote() async{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<Map<String,String>> notes = _parseNotes(prefs.getString('notes'));
+    List<Map<String,String>> notes = NoteFunctions.parseNotes(prefs.getString('notes'));
 
     setState(() {
       if (notes.length >= _noteIndex){
@@ -51,26 +53,13 @@ class EditNoteState extends State<EditNote>{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final Map<String,String> note = {'title':_titleController.text,'body':_bodyController.text};
 
-    List<Map<String,String>> notes = _parseNotes(prefs.getString('notes'));
+    List<Map<String,String>> notes = NoteFunctions.parseNotes(prefs.getString('notes'));
 
     if (notes.length >= _noteIndex){
       notes[_noteIndex] = note;
     }
 
     prefs.setString('notes', json.encode(notes));
-  }
-
-  List<Map<String,String>> _parseNotes(var notes){
-    List<Map<String,String>> parsed = new List<Map<String,String>>();
-
-    if (notes != null){
-       for (var note in json.decode(notes)){
-        Map<String,String> data = Map<String,String>.from(note);
-        parsed.add(data);
-      }
-    }
-    
-    return parsed;
   }
 
   @override
